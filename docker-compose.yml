@@ -7,9 +7,26 @@ services:
       - MONGO_URI=mongodb://mongo:27017/mydatabase
     depends_on:
       - mongo
+    networks:
+      - web
+      - sitemaps
     volumes:
       - .:/app
+    labels:
+      traefik.http.routers.wf_sitemaps.rule: Host(`sitemaps.vcsr.ai`)
+      traefik.http.routers.wf_sitemaps.tls: true
+      traefik.http.routers.wf_sitemaps.tls.certresolver: lets-encrypt
   mongo:
     image: mongo:latest
     ports:
       - "27017:27017"
+
+
+
+networks:
+  web:
+    name: web
+    external: true
+  sitemaps:
+    name: sitemaps
+    external: false

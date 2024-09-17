@@ -1,8 +1,9 @@
-import { Router } from 'express';
-import { getSitemap } from '../controllers/sitemapController';
+import { Router, Request, Response } from 'express';
+import { handleSitemap } from '../controllers/sitemapController';
 
 const router = Router();
 
-router.get('/', getSitemap);
+// router.get('/', (req: Request, res: Response) => res.send('This service expects to receive an an authorized webhook POST from an authorized source.  You are neither.'));
+router.post('/', handleSitemap);
 
 export default router;

@@ -1,33 +1,35 @@
-import { express, Request, Response } from 'express';
-import mongoose from 'mongoose';
-import sitemapRoutes from './routes/sitemapRoutes';
+import express from 'express';
+// import mongoose from 'mongoose';
+import cors from 'cors'; // Import CORS middleware
 import webhookRoutes from './routes/webhookRoutes';
+import sitemapRoutes from './routes/sitemapRoutes';
+import validateUrl from './middleware/validateUrl';
 
 const app = express();
-const router = new 
+
+// Use CORS middleware with no restrictions
+app.use(cors())
+
+// @TODO: Add Restrictions sometime; example: 
+// {
+//   origin: 'http://localhost:3000', // Replace with your frontend's origin
+//   methods: ['GET', 'POST'],
+//   allowedHeaders: ['Content-Type']
+// }
 
 // Middleware
 app.use(express.json());
 
-// Routes
-app.use('/', router.get('/a', async (
-  req: Request,
-  res: Response
-) => {
-  res.send('Welcome to the API!');
-  console.log("Hello World");
-}));
-
-app.use('/sync', sitemapRoutes);
 app.use('/webhooks', webhookRoutes);
+app.use('/fetch-sitemap', validateUrl, sitemapRoutes);
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mydatabase')
-  .then(() => {
-    console.log('Connected to MongoDB');
-  })
-  .catch((err) => {
-    console.error('MongoDB connection error:', err);
-  });
+// mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/mydatabase')
+//   .then(() => {
+//     console.log('Connected to MongoDB');
+//   })
+//   .catch((err) => {
+//     console.error('MongoDB connection error:', err);
+//   });
 
 export default app;
